@@ -13,9 +13,9 @@ class ShortcodesControllerTest < ActionDispatch::IntegrationTest
     assert_response(:ok)
     assert_equal("ok", json["status"])
 
-    assert_includes(json["shortcodes"].map { |s| s["shortcode"] }, shortcodes(:this).shortcode)
+    assert_includes(json["shortcodes"].map { |s| s["key"] }, shortcodes(:this).key)
     assert_includes(json["shortcodes"].map { |s| s["url"] }, shortcodes(:this).url)
-    refute_includes(json["shortcodes"].map { |s| s["shortcode"] }, shortcodes(:other).shortcode)
+    refute_includes(json["shortcodes"].map { |s| s["key"] }, shortcodes(:other).key)
   end
 
   def test_show
@@ -23,9 +23,8 @@ class ShortcodesControllerTest < ActionDispatch::IntegrationTest
 
     get shortcode_url(shortcode.id), user_authed
     assert_response(:ok)
-    assert_equal(shortcode.shortcode, json.dig("shortcode", "shortcode"))
+    assert_equal(shortcode.key, json.dig("shortcode", "key"))
     assert_equal(shortcode.url, json.dig("shortcode", "url"))
-    assert_equal(shortcode.allow_params, json.dig("shortcode", "allow_params"))
   end
 
   def test_show_for_other_account
@@ -40,9 +39,8 @@ class ShortcodesControllerTest < ActionDispatch::IntegrationTest
   def test_create
     params = {
       shortcode: {
-        shortcode: "#{unique_suffix}",
-        url: "https://#{unique_suffix}.example.com",
-        allow_params: false
+        key: "#{unique_suffix}",
+        url: "https://#{unique_suffix}.example.com"
       }
     }
 
@@ -58,9 +56,8 @@ class ShortcodesControllerTest < ActionDispatch::IntegrationTest
     post shortcodes_url, user_authed(params: params)
     assert_response(:bad_request)
     assert_equal("error", json["status"])
-    assert_equal("can't be blank", json.dig("errors", "shortcode"))
+    assert_equal("can't be blank", json.dig("errors", "key"))
     assert_equal("can't be blank", json.dig("errors", "url"))
-    assert_equal("is not included in the list", json.dig("errors", "allow_params"))
   end
 
   def test_update
@@ -76,12 +73,12 @@ class ShortcodesControllerTest < ActionDispatch::IntegrationTest
 
   def test_update_with_bad_data
     shortcode = shortcodes(:this)
-    params = { shortcode: { shortcode: "" } }
+    params = { shortcode: { key: "" } }
 
     put shortcode_url(shortcode.id), user_authed(params: params)
     assert_response(:bad_request)
     assert_equal("error", json["status"])
-    assert_equal("can't be blank", json.dig("errors", "shortcode"))
+    assert_equal("can't be blank", json.dig("errors", "key"))
   end
 
   def test_update_with_unknown_shortcode
@@ -111,7 +108,7 @@ class ShortcodesControllerTest < ActionDispatch::IntegrationTest
   def test_resolve
     shortcode = shortcodes(:this)
 
-    get resolver_url(shortcode.shortcode)
+    get resolver_url(shortcode.key)
     assert_redirected_to shortcode.url
   end
 

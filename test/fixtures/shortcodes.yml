@@ -1,20 +1,17 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 this:
-  shortcode: "this"
+  key: "this"
   url: "https://this.example.com"
   user: :user
-  allow_params: false
 
 that:
-  shortcode: "that"
+  key: "that"
   url: "https://that.example.com"
   user: :user
-  allow_params: false
 
 other:
-  shortcode: "other"
+  key: "other"
   url: "https://other.example.com"
   user: :admin
-  allow_params: false
 

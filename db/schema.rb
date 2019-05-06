@@ -13,13 +13,12 @@
 ActiveRecord::Schema.define(version: 2019_05_05_174721) do
 
   create_table "shortcodes", force: :cascade do |t|
-    t.string "shortcode"
+    t.string "key"
     t.string "url"
-    t.boolean "allow_params"
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["shortcode"], name: "index_shortcodes_on_shortcode", unique: true
+    t.index ["key"], name: "index_shortcodes_on_key", unique: true
     t.index ["user_id"], name: "index_shortcodes_on_user_id"
   end
 

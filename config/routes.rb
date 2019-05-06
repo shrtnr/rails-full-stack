@@ -10,5 +10,5 @@ Rails.application.routes.draw do
     end
   end
 
-  get "/:shortcode" => "shortcodes#resolve", as: :resolver
+  get "/:key" => "shortcodes#resolve", as: :resolver
 end

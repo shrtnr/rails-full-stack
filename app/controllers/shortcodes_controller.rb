@@ -17,10 +17,7 @@ class ShortcodesController < ApiController
       render json: { status: :ok, location: shortcode_url(@shortcode.id) },
              location: shortcode_url(@shortcode.id), status: :created
     else
-      errors = @shortcode.errors.to_hash.each.with_object({}) do |(k, v), err|
-        err[k] = v.join("; ")
-      end
-      render json: { status: :error, errors: errors }, status: :bad_request
+      render json: { status: :error, errors: format_errors(@shortcode) }, status: :bad_request
     end
   end
 
@@ -39,7 +36,7 @@ class ShortcodesController < ApiController
   end
 
   def resolve
-    @shortcode = Shortcode.find_by!(shortcode: params[:shortcode])
+    @shortcode = Shortcode.find_by!(key: params[:key])
     redirect_to @shortcode.url 
   rescue ActiveRecord::RecordNotFound
     render json: { status: :error, errors: { "shortcode" => "not found" } }, status: :not_found
@@ -54,6 +51,6 @@ private
   end
 
   def permitted_params
-    params.require(:shortcode).permit(:shortcode, :url, :allow_params)
+    params.require(:shortcode).permit(:key, :url)
   end
 end
