@@ -1,24 +1,65 @@
-# README
+# SHRTNR: Ruby Full-Stack Implementation
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This is the Client/Server implementation of SHRTNR on Ruby. As Ruby has been my
+home language for a while, it made sense to use this as the reference
+implementation of the core SHRTNR featureset before branching out into other
+languages.
 
-Things you may want to cover:
+## Setup
 
-* Ruby version
+```
+bundle install
+bin/rails db:setup
+```
 
-* System dependencies
+In development mode, this will seed the database with an admin account:
 
-* Configuration
+* email: `admin@example.com`
+* password: `password`
 
-* Database creation
+## Testing
 
-* Database initialization
+Single run: `bin/rails test`
 
-* How to run the test suite
+Continuous testing: `bin/rerun`
 
-* Services (job queues, cache servers, search engines, etc.)
+## Running the server
 
-* Deployment instructions
+```
+bin/rails server
+```
 
-* ...
+## API Features
+
+Authenticate as an admin:
+
+```
+curl "http://localhost:3000/api/users/auth" \
+  -X POST \
+  -d "{\"email\":\"admin@example.com\",\"password\":\"password\"}" \
+  -H "Content-Type: application/json" 
+```
+
+For most the API endpoints, that token will be required, assigning it to a
+variable might be helpful...
+
+```
+TOKEN="eyJhbG..."
+```
+
+List shortcodes:
+
+```
+curl "http://localhost:3000/api/shortcodes" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer ${TOKEN}"
+```
+
+List users:
+
+```
+curl "http://localhost:3000/api/users" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer ${TOKEN}"
+```
+
