@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  remote_ip: "10.10.10.1"
+  request: "https://www.example.com/abc123"
+  referrer: "www.example.com"
+  user_agent: "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"
+  shortcode: :one
+

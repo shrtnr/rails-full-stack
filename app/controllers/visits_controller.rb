@@ -1,0 +1,2 @@
+class VisitsController < ApiController
+end

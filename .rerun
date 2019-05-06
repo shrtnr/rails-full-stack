@@ -1,0 +1,2 @@
+--pattern *.rb 
+bin/rails test

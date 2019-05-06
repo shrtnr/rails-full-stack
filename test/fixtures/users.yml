@@ -1,0 +1,12 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+admin:
+  email: "admin@example.com"
+  password_digest: "$2a$10$pWYxg6EeyVcEpra.9O/EuePDwo3xcrmXz1RRdVA7ptzFk.mLMno56" # 'password'
+  admin: true
+
+user:
+  email: "user@example.com"
+  password_digest: "$2a$10$pWYxg6EeyVcEpra.9O/EuePDwo3xcrmXz1RRdVA7ptzFk.mLMno56" # 'password'
+  admin: false
+
