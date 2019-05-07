@@ -3,8 +3,10 @@ class UsersController < ApiController
   before_action :find_user!, only: %i(show update destroy)
 
   def index
-    @users = User.all
-    render json: { status: :ok, users: @users }, status: :ok
+    @users = User.all.page(@pagination.page).per(@pagination.per_page)
+    total = User.count
+    render json: { status: :ok, total: total, users: @users }.merge(@pagination.to_h), 
+           status: :ok
   end
 
   def show

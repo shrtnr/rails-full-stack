@@ -34,6 +34,7 @@ ActiveRecord::Schema.define(version: 2019_05_05_174721) do
   create_table "visits", force: :cascade do |t|
     t.string "remote_ip"
     t.string "request"
+    t.string "target"
     t.string "referrer"
     t.string "user_agent"
     t.integer "shortcode_id"

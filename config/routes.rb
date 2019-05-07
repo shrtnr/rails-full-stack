@@ -1,7 +1,8 @@
 Rails.application.routes.draw do
   scope :api do
-    resources :shortcodes
-    resources :visits
+    resources :shortcodes do
+      resources :visits
+    end
 
     resources :users do
       collection do

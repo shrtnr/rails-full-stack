@@ -3,6 +3,7 @@ class CreateVisits < ActiveRecord::Migration[5.2]
     create_table :visits do |t|
       t.string :remote_ip
       t.string :request
+      t.string :target
       t.string :referrer
       t.string :user_agent
 

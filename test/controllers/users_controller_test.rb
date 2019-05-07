@@ -15,8 +15,32 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     get users_url, admin_authed
     assert_response(:ok)
     assert_equal("ok", json["status"])
+    assert_equal(2, json["total"])
+    assert_equal(1, json["page"])
+    assert_equal(20, json["per_page"])
+    assert_equal(2, json["users"].length)
+
     assert_includes(json["users"].map { |u| u["email"] }, user.email)
     assert_includes(json["users"].map { |u| u["id"] }, user.id)
+  end
+
+  def test_index_pagination
+    params = Proc.new do 
+      {
+        email: "test+#{unique_suffix}@example.com",
+        password: "password",
+        password_confirmation: "password"
+      }
+    end 
+    5.times { User.create(params.call) }
+
+    get users_url(page: 2, per_page: 4), admin_authed
+    assert_response(:ok)
+    assert_equal("ok", json["status"])
+    assert_equal(7, json["total"])
+    assert_equal(2, json["page"])
+    assert_equal(4, json["per_page"])
+    assert_equal(3, json["users"].length)
   end
 
   def test_show
@@ -39,7 +63,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
   def test_create
     params = {
       user: {
-        email: "test+#{unique_suffix}",
+        email: "test+#{unique_suffix}@example.com",
         password: "password",
         password_confirmation: "password"
       }

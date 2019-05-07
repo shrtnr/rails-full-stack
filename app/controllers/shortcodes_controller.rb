@@ -3,8 +3,10 @@ class ShortcodesController < ApiController
   before_action :find_shortcode!, only: %i(show update destroy)
 
   def index
-    @shortcodes = current_user.shortcodes
-    render json: { status: :ok, shortcodes: @shortcodes }, status: :ok
+    @shortcodes = current_user.shortcodes.page(@pagination.page).per(@pagination.per_page)
+    total = current_user.shortcodes.count
+    render json: { status: :ok, total: total, shortcodes: @shortcodes }.merge(@pagination.to_h),
+           status: :ok
   end
 
   def show
@@ -37,6 +39,15 @@ class ShortcodesController < ApiController
 
   def resolve
     @shortcode = Shortcode.find_by!(key: params[:key])
+
+    @shortcode.visits.create!(
+      remote_ip: request.remote_ip,
+      request: request.original_url,
+      target: @shortcode.url,
+      referrer: request.referrer,
+      user_agent: request.user_agent 
+    )
+
     redirect_to @shortcode.url 
   rescue ActiveRecord::RecordNotFound
     render json: { status: :error, errors: { "shortcode" => "not found" } }, status: :not_found
