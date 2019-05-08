@@ -4,21 +4,22 @@ class ShortcodesControllerTest < ActionDispatch::IntegrationTest
   def test_index_without_creds
     get shortcodes_url, unauthed
     assert_response(:unauthorized)
-    assert_equal("error", json["status"])
-    assert_equal("unauthorized", json.dig("errors", "user"))
+    assert_equal("user is unauthorized", json["error_message"])
   end
 
   def test_index
+    shortcode = shortcodes(:this)
+
     get shortcodes_url, user_authed
     assert_response(:ok)
-    assert_equal("ok", json["status"])
     assert_equal(2, json["total"])
     assert_equal(1, json["page"])
     assert_equal(20, json["per_page"])
     assert_equal(2, json["shortcodes"].length)
 
-    assert_includes(json["shortcodes"].map { |s| s["key"] }, shortcodes(:this).key)
-    assert_includes(json["shortcodes"].map { |s| s["url"] }, shortcodes(:this).url)
+    assert_includes(json["shortcodes"].map { |s| s["user_id"] }, shortcode.user.id)
+    assert_includes(json["shortcodes"].map { |s| s["key"] }, shortcode.key)
+    assert_includes(json["shortcodes"].map { |s| s["url"] }, shortcode.url)
     refute_includes(json["shortcodes"].map { |s| s["key"] }, shortcodes(:other).key)
   end
 
@@ -31,7 +32,6 @@ class ShortcodesControllerTest < ActionDispatch::IntegrationTest
 
     get shortcodes_url(page: 2, per_page: 4), user_authed
     assert_response(:ok)
-    assert_equal("ok", json["status"])
     assert_equal(7, json["total"])
     assert_equal(2, json["page"])
     assert_equal(4, json["per_page"])
@@ -52,8 +52,7 @@ class ShortcodesControllerTest < ActionDispatch::IntegrationTest
 
     get shortcode_url(shortcode.id), user_authed
     assert_response(:not_found)
-    assert_equal("error", json["status"])
-    assert_equal("not found", json.dig("errors", "shortcode"))
+    assert_equal("shortcode not found", json["error_message"])
   end
 
   def test_create
@@ -66,8 +65,6 @@ class ShortcodesControllerTest < ActionDispatch::IntegrationTest
 
     post shortcodes_url, user_authed(params: params)
     assert_response(:created)
-    assert_equal("ok", json["status"])
-    assert_match(%r(^#{shortcodes_url}/.*), json["location"])
     assert_match(%r(^#{shortcodes_url}/.*), @response.headers["location"])
   end
 
@@ -75,9 +72,8 @@ class ShortcodesControllerTest < ActionDispatch::IntegrationTest
     params = { shortcode: { x: "x" } } # required param can't be empty
     post shortcodes_url, user_authed(params: params)
     assert_response(:bad_request)
-    assert_equal("error", json["status"])
-    assert_equal("can't be blank", json.dig("errors", "key"))
-    assert_equal("can't be blank", json.dig("errors", "url"))
+    assert_equal("can't be blank", json.dig("error_messages", "key"))
+    assert_equal("can't be blank", json.dig("error_messages", "url"))
   end
 
   def test_update
@@ -86,8 +82,6 @@ class ShortcodesControllerTest < ActionDispatch::IntegrationTest
 
     put shortcode_url(shortcode.id), user_authed(params: params)
     assert_response(:ok)
-    assert_equal("ok", json["status"])
-    assert_equal(shortcode_url(shortcode.id), json["location"])
     assert_equal(shortcode_url(shortcode.id), @response.headers["location"])
   end
 
@@ -97,8 +91,7 @@ class ShortcodesControllerTest < ActionDispatch::IntegrationTest
 
     put shortcode_url(shortcode.id), user_authed(params: params)
     assert_response(:bad_request)
-    assert_equal("error", json["status"])
-    assert_equal("can't be blank", json.dig("errors", "key"))
+    assert_equal("can't be blank", json.dig("error_messages", "key"))
   end
 
   def test_update_with_unknown_shortcode
@@ -106,8 +99,7 @@ class ShortcodesControllerTest < ActionDispatch::IntegrationTest
 
     put shortcode_url("unknown"), user_authed(params: params)
     assert_response(:not_found)
-    assert_equal("error", json["status"])
-    assert_equal("not found", json.dig("errors", "shortcode"))
+    assert_equal("shortcode not found", json["error_message"])
   end
 
   def test_delete
@@ -115,14 +107,12 @@ class ShortcodesControllerTest < ActionDispatch::IntegrationTest
 
     delete shortcode_url(shortcode.id), user_authed
     assert_response(:ok)
-    assert_equal("ok", json["status"])
   end
 
   def test_delete_with_unknown_user
     delete shortcode_url("unknown"), user_authed
     assert_response(:not_found)
-    assert_equal("error", json["status"])
-    assert_equal("not found", json.dig("errors", "shortcode"))
+    assert_equal("shortcode not found", json["error_message"])
   end
 
   def test_resolve

@@ -5,36 +5,34 @@ class ShortcodesController < ApiController
   def index
     @shortcodes = current_user.shortcodes.page(@pagination.page).per(@pagination.per_page)
     total = current_user.shortcodes.count
-    render json: { status: :ok, total: total, shortcodes: @shortcodes }.merge(@pagination.to_h),
+    render json: { total: total, shortcodes: @shortcodes }.merge(@pagination.to_h),
            status: :ok
   end
 
   def show
-    render json: { status: :ok, shortcode: @shortcode }, status: :ok
+    render json: { shortcode: @shortcode }, status: :ok
   end
 
   def create
     @shortcode = current_user.shortcodes.new(permitted_params)
     if @shortcode.save
-      render json: { status: :ok, location: shortcode_url(@shortcode.id) },
-             location: shortcode_url(@shortcode.id), status: :created
+      head :created, location: shortcode_url(@shortcode.id)
     else
-      render json: { status: :error, errors: format_errors(@shortcode) }, status: :bad_request
+      render json: { error_messages: format_errors(@shortcode) }, status: :bad_request
     end
   end
 
   def update
     if @shortcode.update_attributes(permitted_params)
-      render json: { status: :ok, location: shortcode_url(@shortcode.id) },
-             location: shortcode_url(@shortcode.id), status: :ok
+      head :ok, location: shortcode_url(@shortcode.id), status: :ok
     else
-      render json: { status: :error, errors: format_errors(@shortcode) }, status: :bad_request
+      render json: { error_messages: format_errors(@shortcode) }, status: :bad_request
     end
   end
 
   def destroy
     @shortcode.delete
-    render json: { status: :ok }, status: :ok
+    head :ok
   end
 
   def resolve
@@ -50,7 +48,7 @@ class ShortcodesController < ApiController
 
     redirect_to @shortcode.url 
   rescue ActiveRecord::RecordNotFound
-    render json: { status: :error, errors: { "shortcode" => "not found" } }, status: :not_found
+    render json: { error_message: "shortcode not found" }, status: :not_found
   end
 
 private
@@ -58,7 +56,7 @@ private
   def find_shortcode!
     @shortcode = current_user.shortcodes.find(params[:id])
   rescue ActiveRecord::RecordNotFound
-    render json: { status: :error, errors: { "shortcode" => "not found" } }, status: :not_found
+    render json: { error_message: "shortcode not found" }, status: :not_found
   end
 
   def permitted_params
