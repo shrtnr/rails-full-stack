@@ -1,13 +1,10 @@
 class VisitPresenter < SimpleDelegator
-  attr_reader :h
-
-  def initialize(model, view_context)
-    @h = view_context
+  def initialize(model)
     super(model)
   end
 
   def shortcode
-    h.shortcode_url(shortcode_id)
+    Rails.application.routes.url_helpers.shortcode_url(shortcode_id)
   end
 
   def as_json(*args)

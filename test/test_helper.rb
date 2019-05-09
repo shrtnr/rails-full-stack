@@ -11,13 +11,11 @@ private
   def unique_suffix
     (Time.now.to_f * 1000).to_i.to_s(36)
   end
-
 end
 
 
 class ActionDispatch::IntegrationTest
-
-private
+private # rubocop:disable Layout/IndentationWidth -- rubocop#6861
 
   def json
     JSON.parse(@response.body)

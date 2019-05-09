@@ -1,8 +1,8 @@
-# SHRTNR: Ruby Full-Stack Implementation
+# SHRTNR: Ruby Service Implementation
 
-This is the Client/Server implementation of SHRTNR on Ruby. As Ruby has been my
+This is the Service implementation of SHRTNR on Ruby. As Ruby has been my
 home language for a while, it made sense to use this as the reference
-implementation of the core SHRTNR featureset before branching out into other
+implementation of the core SHRTNR feature set before branching out into other
 languages.
 
 ## Setup

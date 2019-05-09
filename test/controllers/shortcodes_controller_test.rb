@@ -125,8 +125,9 @@ class ShortcodesControllerTest < ActionDispatch::IntegrationTest
     refute_equal(visits_before, shortcode.visits.count)
 
     last_visit = shortcode.visits.last
+    host_name = Rails.application.routes.default_url_options[:host]
     assert_equal("127.0.0.1", last_visit.remote_ip)
-    assert_equal("http://www.example.com/this", last_visit.request)
+    assert_equal("http://#{host_name}/this", last_visit.request)
     assert_equal("https://this.example.com", last_visit.target)
   end
 

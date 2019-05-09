@@ -1,4 +1,4 @@
-class VisitsController < ApiController
+class VisitsController < ApplicationController
   before_action :validate_user!
   before_action :find_shortcode!
 
@@ -6,7 +6,7 @@ class VisitsController < ApiController
     @visits = @shortcode.visits
                         .page(@pagination.page)
                         .per(@pagination.per_page)
-                        .map { |v| VisitPresenter.new(v, view_context) }
+                        .map { |v| VisitPresenter.new(v) }
     total = @shortcode.visits.count
 
     render json: { total: total, visits: @visits}.merge(@pagination.to_h), 

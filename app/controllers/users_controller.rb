@@ -1,4 +1,4 @@
-class UsersController < ApiController
+class UsersController < ApplicationController
   before_action :validate_admin!, except: %i(auth show)
   before_action :find_user!, only: %i(show update destroy)
 
