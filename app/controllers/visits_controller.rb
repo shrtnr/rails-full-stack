@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class VisitsController < ApplicationController
   before_action :validate_user!
   before_action :find_shortcode!
@@ -9,7 +11,7 @@ class VisitsController < ApplicationController
                         .map { |v| VisitPresenter.new(v) }
     total = @shortcode.visits.count
 
-    render json: { total: total, visits: @visits}.merge(@pagination.to_h), 
+    render json: { total: total, visits: @visits }.merge(@pagination.to_h),
            status: :ok
   end
 
@@ -18,6 +20,6 @@ private
   def find_shortcode!
     @shortcode = current_user.shortcodes.find(params[:shortcode_id])
   rescue ActiveRecord::RecordNotFound
-    render json: { error_message: "shortcode not found" }, status: :not_found
+    render json: { error_message: 'shortcode not found' }, status: :not_found
   end
 end

@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class ShortcodesController < ApplicationController
   before_action :validate_user!, except: :resolve
-  before_action :find_shortcode!, only: %i(show update destroy)
+  before_action :find_shortcode!, only: %i[show update destroy]
 
   def index
     @shortcodes = current_user.shortcodes
@@ -46,12 +48,12 @@ class ShortcodesController < ApplicationController
       request: request.original_url,
       target: @shortcode.url,
       referrer: request.referrer,
-      user_agent: request.user_agent 
+      user_agent: request.user_agent
     )
 
     redirect_to @shortcode.url
   rescue ActiveRecord::RecordNotFound
-    render json: { error_message: "shortcode not found" }, status: :not_found
+    render json: { error_message: 'shortcode not found' }, status: :not_found
   end
 
 private
@@ -59,7 +61,7 @@ private
   def find_shortcode!
     @shortcode = current_user.shortcodes.find(params[:id])
   rescue ActiveRecord::RecordNotFound
-    render json: { error_message: "shortcode not found" }, status: :not_found
+    render json: { error_message: 'shortcode not found' }, status: :not_found
   end
 
   def permitted_params

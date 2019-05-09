@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class User < ApplicationRecord
   has_secure_password
 
@@ -20,8 +22,8 @@ class User < ApplicationRecord
   def self.from_jwt(jwt)
     secret = Rails.application.credentials.jwt_hash_secret
     payload = JWT.decode(jwt, secret, 'HS256').first
-    find_by(email: payload["sub"])
+    find_by(email: payload['sub'])
   rescue JWT::DecodeError
-    return nil
+    nil
   end
 end

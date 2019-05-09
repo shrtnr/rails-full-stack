@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class VisitPresenter < SimpleDelegator
   def initialize(model)
     super(model)
@@ -9,9 +11,8 @@ class VisitPresenter < SimpleDelegator
 
   def as_json(*args)
     super.tap do |hsh|
-      hsh.delete("shortcode_id")
-      hsh["shortcode"] = shortcode
+      hsh.delete('shortcode_id')
+      hsh['shortcode'] = shortcode
     end
   end
 end
-

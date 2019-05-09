@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ENV['RAILS_ENV'] ||= 'test'
 require_relative '../config/environment'
 require 'rails/test_help'
@@ -13,7 +15,6 @@ private
   end
 end
 
-
 class ActionDispatch::IntegrationTest
 private # rubocop:disable Layout/IndentationWidth -- rubocop#6861
 
@@ -24,14 +25,14 @@ private # rubocop:disable Layout/IndentationWidth -- rubocop#6861
   def user_authed(**options)
     {
       as: :json,
-      headers: { "Authorization" => "Bearer #{users(:user).to_jwt}" }
+      headers: { 'Authorization' => "Bearer #{users(:user).to_jwt}" }
     }.merge(options)
   end
 
   def admin_authed(**options)
     {
       as: :json,
-      headers: { "Authorization" => "Bearer #{users(:admin).to_jwt}" }
+      headers: { 'Authorization' => "Bearer #{users(:admin).to_jwt}" }
     }.merge(options)
   end
 

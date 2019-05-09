@@ -1,0 +1,39 @@
+AllCops:
+  Exclude:
+    - db/**/*
+    - config/**/*
+    - bin/**/*
+    - Gemfile
+
+# Layout configs
+
+Layout/AccessModifierIndentation:
+  EnforcedStyle: outdent
+
+# Style configs
+
+Style/ClassAndModuleChildren:
+  Exclude:
+    - test/**/*.rb
+
+Style/Documentation:
+  Enabled: false
+
+# Metric configs
+
+Metrics/LineLength:
+  Max: 100
+
+Metrics/MethodLength:
+  Exclude:
+    - test/**/*.rb
+  Max: 15
+
+Metrics/ClassLength:
+  Exclude:
+    - test/**/*.rb
+
+Metrics/AbcSize:
+  Exclude:
+    - test/**/*.rb
+  Max: 20

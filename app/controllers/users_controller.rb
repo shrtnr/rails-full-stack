@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 class UsersController < ApplicationController
-  before_action :validate_admin!, except: %i(auth show)
-  before_action :find_user!, only: %i(show update destroy)
+  before_action :validate_admin!, except: %i[auth show]
+  before_action :find_user!, only: %i[show update destroy]
 
   def index
     @users = User.all.page(@pagination.page).per(@pagination.per_page)
     total = User.count
-    render json: { total: total, users: @users }.merge(@pagination.to_h), 
+    render json: { total: total, users: @users }.merge(@pagination.to_h),
            status: :ok
   end
 
@@ -37,10 +39,10 @@ class UsersController < ApplicationController
 
   def auth
     @user = User.find_by(email: permitted_auth_params[:email])
-    if @user && @user.authenticate(permitted_auth_params[:password])
-      render json: { token: @user.to_jwt}, status: :ok
+    if @user&.authenticate(permitted_auth_params[:password])
+      render json: { token: @user.to_jwt }, status: :ok
     else
-      render json: { error_message: "user is unauthorized" }, status: :unauthorized
+      render json: { error_message: 'user is unauthorized' }, status: :unauthorized
     end
   end
 
@@ -49,7 +51,7 @@ private
   def find_user!
     @user = User.find(params[:id])
   rescue ActiveRecord::RecordNotFound
-    render json: { error_message: "user not found" }, status: :not_found
+    render json: { error_message: 'user not found' }, status: :not_found
   end
 
   def permitted_params
