@@ -25,7 +25,7 @@ class VisitsControllerTest < ActionDispatch::IntegrationTest
     assert_equal(20, json["per_page"])
     assert_equal(2, json["visits"].length)
 
-    assert_includes(json["visits"].map { |s| s["shortcode_id"] }, visit.shortcode.id) 
+    assert_includes(json["visits"].map { |s| s["shortcode"] }, shortcode_url(visit.shortcode.id))
     assert_includes(json["visits"].map { |s| s["remote_ip"] }, visit.remote_ip)
     assert_includes(json["visits"].map { |s| s["request"] }, visit.request)
     assert_includes(json["visits"].map { |s| s["target"] }, visit.target)

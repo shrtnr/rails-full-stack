@@ -17,7 +17,7 @@ class ShortcodesControllerTest < ActionDispatch::IntegrationTest
     assert_equal(20, json["per_page"])
     assert_equal(2, json["shortcodes"].length)
 
-    assert_includes(json["shortcodes"].map { |s| s["user_id"] }, shortcode.user.id)
+    assert_includes(json["shortcodes"].map { |s| s["user"] }, user_url(shortcode.user.id))
     assert_includes(json["shortcodes"].map { |s| s["key"] }, shortcode.key)
     assert_includes(json["shortcodes"].map { |s| s["url"] }, shortcode.url)
     refute_includes(json["shortcodes"].map { |s| s["key"] }, shortcodes(:other).key)
@@ -43,6 +43,7 @@ class ShortcodesControllerTest < ActionDispatch::IntegrationTest
 
     get shortcode_url(shortcode.id), user_authed
     assert_response(:ok)
+    assert_equal(user_url(shortcode.user.id), json.dig("shortcode", "user"))
     assert_equal(shortcode.key, json.dig("shortcode", "key"))
     assert_equal(shortcode.url, json.dig("shortcode", "url"))
   end

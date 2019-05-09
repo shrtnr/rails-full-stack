@@ -3,14 +3,17 @@ class ShortcodesController < ApiController
   before_action :find_shortcode!, only: %i(show update destroy)
 
   def index
-    @shortcodes = current_user.shortcodes.page(@pagination.page).per(@pagination.per_page)
+    @shortcodes = current_user.shortcodes
+                              .page(@pagination.page)
+                              .per(@pagination.per_page)
+                              .map { |sc| ShortcodePresenter.new(sc, view_context) }
     total = current_user.shortcodes.count
     render json: { total: total, shortcodes: @shortcodes }.merge(@pagination.to_h),
            status: :ok
   end
 
   def show
-    render json: { shortcode: @shortcode }, status: :ok
+    render json: { shortcode: ShortcodePresenter.new(@shortcode, view_context) }, status: :ok
   end
 
   def create
